@@ -8,17 +8,22 @@ const routes = [
     redirect: '/dashboard',
     children: [
       {
-        path: "/dashboard",   
+        path: "/dashboard",
         name: "Dashboard",
         component: () => import("../views/Dashboard.vue"),
       },
       {
-        path: "/discipulos",   
+        path: "/discipulos",
         name: "Discipulos",
         component: () => import("../views/Discipulos.vue"),
       },
       {
-        path: "/vinculos",   
+        path: "/discipulos/novo",
+        name: "Novo Discipulo",
+        component: () => import("../views/NovoDiscipulo.vue")
+      },
+      {
+        path: "/vinculos",
         name: "Vinculos",
         component: () => import("../views/Vinculos.vue"),
       },
@@ -28,7 +33,7 @@ const routes = [
     path: "/login",
     name: "Login",
     component: () => import("../views/Login.vue"),
-  },
+  },  
 ];
 
 
@@ -40,11 +45,24 @@ const router = createRouter({
 });
 
 
-router.beforeEach((to, from, next) => {
-  let isAuthenticated = authStore.getters.isAuthenticated  
+router.beforeEach(async (to, from, next) => {
+  
+  const isAuthenticated = authStore.getters.isAuthenticated.value
 
-  if (to.name !== 'Login' && !isAuthenticated) next({ path: '/login' })
-  else next()
+  if (to.name !== 'Login' && !isAuthenticated) {
+    return next({ path: '/login' })    
+  }  
+
+  if (to.name === 'Login' && isAuthenticated) {
+     return next({ path: '/dashboard' }) 
+  }
+
+  if (to.path === '/logout') {
+    await authStore.logout()
+    return next({ path: '/login' })
+  }
+
+  next()
 
 
 })
