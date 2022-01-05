@@ -9,11 +9,9 @@
           alt="Workflow"
         />
         <h2 class="mt-6 text-3xl font-extrabold text-center text-gray-900">Gestão de Discipulos</h2>
-        <p class="mt-2 text-sm text-center text-gray-600">
-          Acesse sua Conta          
-        </p>
+        <p class="mt-2 text-sm text-center text-gray-600">Acesse sua Conta</p>
       </div>
-      <form class="mt-8 space-y-6" action="#" method="POST">
+      <form class="mt-8 space-y-6" @submit.prevent="login">
         <input type="hidden" name="remember" value="true" />
         <div class="-space-y-px rounded-md shadow-sm">
           <div>
@@ -26,10 +24,11 @@
               required
               class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="Email address"
+              v-model="email"
             />
           </div>
           <div>
-            <label for="password" class="sr-only">Senha</label>
+            <label for="password-field" class="sr-only">Senha</label>
             <input
               id="password"
               name="password"
@@ -38,6 +37,7 @@
               required
               class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="Password"
+              v-model="password"
             />
           </div>
         </div>
@@ -50,7 +50,7 @@
               type="checkbox"
               class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
             />
-            <label for="remember-me" class="block ml-2 text-sm text-gray-900">Matenha-me conectado</label> -->
+            <label for="remember-me" class="block ml-2 text-sm text-gray-900">Matenha-me conectado</label>-->
           </div>
 
           <div class="text-sm">
@@ -76,17 +76,36 @@
           </button>
         </div>
       </form>
+      <div class="w-full sm:w-1/2 sm:pl-2">
+        <button :click="loginGoogle()" class="w-full px-4 py-2 font-bold text-white bg-red-700 rounded-md hover:bg-red-800 focus:outline-none focus:shadow-outline"> Entrar com o Google</button>
+      </div>
     </div>
+    
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import authStore from '../store/auth'
 import { LockClosedIcon } from '@heroicons/vue/solid'
-import { defineComponent } from '@vue/runtime-core'
 
-export default defineComponent({
-  components: {
-    LockClosedIcon,
-  },
-})
+
+
+const email = ref('')
+const password = ref('')
+const router = useRouter()
+
+
+const login = () => {
+  authStore.login(email.value, password.value)
+  router.push('/dashboard')
+
+}
+
+const loginGoogle = () => {
+  authStore.loginGoogle()
+}
+
+
 </script>
