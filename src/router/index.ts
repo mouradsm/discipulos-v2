@@ -15,12 +15,17 @@ const routes = [
       {
         path: "/discipulos",
         name: "Discipulos",
-        component: () => import("../views/Discipulos.vue"),
+        component: () => import("../views/discipulos/List.vue"),
       },
       {
-        path: "/discipulos/novo",
+        path: "/discipulos/new",
         name: "Novo Discipulo",
-        component: () => import("../views/NovoDiscipulo.vue")
+        component: () => import("../views/discipulos/Add.vue")
+      },
+      {
+        path: "/discipulos/edit/:id",
+        name: "Editar Discipulo",
+        component: () => import("../views/discipulos/Edit.vue")
       },
       {
         path: "/vinculos",
@@ -28,6 +33,10 @@ const routes = [
         component: () => import("../views/Vinculos.vue"),
       },
     ]
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    component: () => import("../views/PageNotFound.vue")
   },
   {
     path: "/login",
